@@ -2,7 +2,7 @@ services:
   - type: web
     name: flashcard
     runtime: docker
-    plan: starter
+    plan: free
     healthCheckPath: /api/me
     envVars:
       - key: DATA_DIR
@@ -16,8 +16,4 @@ services:
       - key: ADMIN_USER
         value: admin
       - key: ADMIN_PASSWORD
-        sync: false        # bạn nhập trên giao diện Render, không ghi vào Git
-    disk:
-      name: flashcard-data
-      mountPath: /data
-      sizeGB: 1
+        sync: false
