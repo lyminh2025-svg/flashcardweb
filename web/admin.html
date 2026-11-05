@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quản trị Flashcard</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🗂️%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/">Flashcard · Quản trị</a>
+  <div class="top-actions">
+    <a class="btn ghost small" href="/">Về trang học</a>
+    <button id="logout" class="btn ghost small" type="button" hidden>Đăng xuất</button>
+  </div>
+</header>
+
+<main>
+  <section id="loginView" hidden>
+    <form id="loginForm" class="panel narrow">
+      <h1>Đăng nhập quản trị</h1>
+      <label>Tên đăng nhập<input id="lu" autocomplete="username" required></label>
+      <label>Mật khẩu<input id="lp" type="password" autocomplete="current-password" required></label>
+      <p id="loginErr" class="err" role="alert"></p>
+      <button class="btn" type="submit" style="width:100%">Đăng nhập</button>
+    </form>
+  </section>
+
+  <section id="panelView" hidden>
+    <nav class="tabs">
+      <button data-tab="cards" class="active" type="button">Flashcard</button>
+      <button data-tab="topics" type="button">Chủ đề</button>
+      <button data-tab="system" type="button">Sao lưu và tài khoản</button>
+    </nav>
+
+    <div id="tab-cards">
+      <div class="bar-row">
+        <select id="filterTopic" aria-label="Lọc theo chủ đề"></select>
+        <span class="grow muted" id="cardCount"></span>
+        <button id="addCard" class="btn" type="button">Thêm flashcard</button>
+      </div>
+      <div id="cardList" class="list"></div>
+    </div>
+
+    <div id="tab-topics" hidden>
+      <div class="bar-row"><span class="grow muted">Mỗi flashcard thuộc một chủ đề.</span><button id="addTopic" class="btn" type="button">Thêm chủ đề</button></div>
+      <div id="topicList" class="list"></div>
+    </div>
+
+    <div id="tab-system" hidden>
+      <div class="panel" style="margin-bottom:16px">
+        <h2>Sao lưu</h2>
+        <p class="muted">Tải về một file gồm database và toàn bộ hình ảnh.</p>
+        <a class="btn" href="/api/admin/backup" download>Tải bản sao lưu</a>
+        <p class="muted small" style="margin-top:12px">Phục hồi: chép file vào Raspberry Pi rồi chạy <code>./restore.sh ten-file.tar.gz</code> trong thư mục ứng dụng.</p>
+      </div>
+      <form id="pwForm" class="panel narrow" style="margin:0">
+        <h2>Đổi mật khẩu</h2>
+        <label>Mật khẩu hiện tại<input id="pwOld" type="password" autocomplete="current-password" required></label>
+        <label>Mật khẩu mới (ít nhất 8 ký tự)<input id="pwNew" type="password" autocomplete="new-password" minlength="8" required></label>
+        <label>Nhập lại mật khẩu mới<input id="pwNew2" type="password" autocomplete="new-password" minlength="8" required></label>
+        <p id="pwErr" class="err" role="alert"></p>
+        <button class="btn" type="submit">Đổi mật khẩu</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<dialog id="cardDlg">
+  <form id="cardForm">
+    <h2 id="cardDlgTitle">Thêm flashcard</h2>
+    <label>Chủ đề<select id="cTopic" required></select></label>
+    <label>Hình ảnh mặt trước (từ máy tính hoặc điện thoại)
+      <input id="cFile" type="file" accept="image/jpeg,image/png,image/gif,image/webp">
+    </label>
+    <label>Nội dung mặt sau (nghĩa, giải thích, từ vựng…)
+      <textarea id="cBack" maxlength="5000" required></textarea>
+    </label>
+    <label>Từ khóa hoặc ghi chú bổ sung (không bắt buộc)
+      <input id="cKeys" maxlength="500">
+    </label>
+
+    <div class="pv-title">Xem trước</div>
+    <div class="scene pv-scene">
+      <div class="card" id="pvCard" tabindex="0" role="button" aria-label="Lật thẻ xem trước">
+        <div class="face front"><img id="pvImg" alt=""></div>
+        <div class="face back"><div class="back-inner"><div id="pvText"></div><div id="pvKeys" class="keys"></div></div></div>
+      </div>
+    </div>
+    <p class="pv-hint">Chạm vào thẻ để xem mặt sau</p>
+
+    <p id="cardErr" class="err" role="alert"></p>
+    <div class="dlg-acts">
+      <button type="button" class="btn ghost" id="cardCancel">Hủy</button>
+      <button type="submit" class="btn" id="cardSave">Lưu flashcard</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="topicDlg">
+  <form id="topicForm">
+    <h2 id="topicDlgTitle">Thêm chủ đề</h2>
+    <label>Tên chủ đề<input id="tName" maxlength="100" required></label>
+    <label>Mô tả<textarea id="tDesc" maxlength="500" style="min-height:90px"></textarea></label>
+    <p id="topicErr" class="err" role="alert"></p>
+    <div class="dlg-acts">
+      <button type="button" class="btn ghost" id="topicCancel">Hủy</button>
+      <button type="submit" class="btn">Lưu chủ đề</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="toast" class="toast" hidden></div>
+<script src="/static/admin.js"></script>
+</body>
+</html>

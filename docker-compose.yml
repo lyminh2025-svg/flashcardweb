@@ -1,0 +1,17 @@
+services:
+  flashcard:
+    build: .
+    image: flashcard:latest
+    container_name: flashcard
+    restart: unless-stopped
+    ports:
+      - "3090:3090"          # truy cập: http://192.168.1.125:3090
+    environment:
+      TZ: Asia/Ho_Chi_Minh
+      PORT: "3090"
+      DATA_DIR: /data
+      ADMIN_USER: ${ADMIN_USER:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      ADMIN_RESET: ${ADMIN_RESET:-false}
+    volumes:
+      - ./data:/data         # database + hình ảnh, giữ nguyên khi khởi động lại

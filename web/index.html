@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flashcard</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🗂️%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/">Flashcard</a>
+  <div class="top-actions"><a class="btn ghost small" href="/admin">Tạo nội dung</a></div>
+</header>
+
+<main>
+  <section id="home">
+    <h1>Chọn chủ đề để học</h1>
+    <form id="homeSearch" class="search" role="search">
+      <input type="search" id="homeQ" placeholder="Tìm flashcard theo từ khóa" aria-label="Tìm flashcard">
+      <button class="btn" type="submit">Tìm</button>
+    </form>
+    <div id="topicGrid" class="grid"></div>
+    <div class="stats">
+      <span id="statToday"></span>
+      <span id="statWeek"></span>
+      <button class="linkbtn" id="resetProgress" type="button">Xóa tiến độ trên thiết bị này</button>
+    </div>
+  </section>
+
+  <section id="study" hidden>
+    <div class="toolbar">
+      <button id="backHome" class="btn ghost small" type="button">← Chủ đề</button>
+      <strong id="studyTitle"></strong>
+    </div>
+    <div class="filters">
+      <input type="search" id="q" placeholder="Tìm trong chủ đề này" aria-label="Tìm kiếm">
+      <select id="mode" aria-label="Lọc thẻ">
+        <option value="all">Tất cả thẻ</option>
+        <option value="due">Cần ôn hôm nay</option>
+        <option value="new">Chưa học</option>
+        <option value="fav">Yêu thích</option>
+        <option value="hard">Khó nhớ</option>
+      </select>
+      <button id="shuffle" class="btn toggle" type="button" aria-pressed="false">Xáo trộn</button>
+    </div>
+
+    <div id="empty" class="empty" hidden>
+      <p><strong>Không có thẻ nào</strong></p>
+      <p id="emptyMsg"></p>
+    </div>
+
+    <div id="player">
+      <div class="meta"><span id="counter"></span><span id="topicBadge" class="badge"></span></div>
+      <div class="scene" id="scene">
+        <div class="card" id="card" tabindex="0" role="button" aria-label="Lật thẻ">
+          <div class="face front"><img id="frontImg" alt="Hình minh họa flashcard"></div>
+          <div class="face back"><div class="back-inner"><div id="backText"></div><div id="backKeys" class="keys"></div></div></div>
+        </div>
+      </div>
+      <div class="nav">
+        <button id="prev" class="btn ghost" type="button">← Trước</button>
+        <span class="hint">Chạm vào thẻ để lật</span>
+        <button id="next" class="btn" type="button">Tiếp →</button>
+      </div>
+      <div class="marks">
+        <button id="favBtn" class="btn ghost small" type="button" aria-pressed="false">★ Yêu thích</button>
+        <button id="hardBtn" class="btn ghost small" type="button" aria-pressed="false">⚑ Khó nhớ</button>
+      </div>
+      <div class="rate" id="rate" hidden>
+        <button class="btn again" data-r="again" type="button">Chưa nhớ</button>
+        <button class="btn" data-r="good" type="button">Nhớ</button>
+        <button class="btn ghost" data-r="easy" type="button">Dễ</button>
+      </div>
+    </div>
+  </section>
+</main>
+<div id="toast" class="toast" hidden></div>
+<script src="/static/app.js"></script>
+</body>
+</html>
