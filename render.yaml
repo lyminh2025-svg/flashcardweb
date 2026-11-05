@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: flashcard
+    runtime: docker
+    plan: starter
+    healthCheckPath: /api/me
+    envVars:
+      - key: DATA_DIR
+        value: /data
+      - key: SECURE_COOKIE
+        value: "true"
+      - key: TRUST_PROXY
+        value: "true"
+      - key: TZ
+        value: Asia/Ho_Chi_Minh
+      - key: ADMIN_USER
+        value: admin
+      - key: ADMIN_PASSWORD
+        sync: false        # bạn nhập trên giao diện Render, không ghi vào Git
+    disk:
+      name: flashcard-data
+      mountPath: /data
+      sizeGB: 1
