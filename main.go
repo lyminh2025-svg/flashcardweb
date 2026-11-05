@@ -421,6 +421,9 @@ func clientIP(r *http.Request) string {
 	return host
 }
 
+func isUnique(err error) bool {
+	return err != nil && strings.Contains(err.Error(), "UNIQUE")
+}
 // ---------------------------------------------------------------- auth
 
 func (a *App) currentUser(r *http.Request) (id int64, username string, ok bool) {
