@@ -409,15 +409,16 @@ func pathID(r *http.Request) (int64, bool) {
 }
 
 func clientIP(r *http.Request) string {
+	if os.Getenv("TRUST_PROXY") == "true" {
+		if xf := r.Header.Get("X-Forwarded-For"); xf != "" {
+			return strings.TrimSpace(strings.Split(xf, ",")[0])
+		}
+	}
 	host, _, err := net.SplitHostPort(r.RemoteAddr)
 	if err != nil {
 		return r.RemoteAddr
 	}
 	return host
-}
-
-func isUnique(err error) bool {
-	return err != nil && strings.Contains(err.Error(), "UNIQUE")
 }
 
 // ---------------------------------------------------------------- auth
